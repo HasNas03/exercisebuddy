@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import WorkoutDetails from '../components/WorkoutDetails'
+import Form from "../components/Form"
+import {useWorkoutsContext} from "../hooks/useWorkoutsContext"
 
 function Home(){
+    const {workouts, dispatch} = useWorkoutsContext()
     // fetch workouts via api from backend 
-
-    const[workouts, setWorkouts] = useState(null)
 
     useEffect(() => {
         const fetchWorkouts = async () => {
@@ -12,11 +13,11 @@ function Home(){
             const json = await response.json()
 
             if (response.ok){
-                setWorkouts(json)
+                dispatch({type: 'SET_WORKOUTS', payload: json})
             }
         }
         fetchWorkouts()
-    }, [])
+    }, [dispatch])
     
     return(
         <div className="home">
@@ -25,6 +26,7 @@ function Home(){
                     <WorkoutDetails key={workout._id} workout={workout}/>
                 ))}
             </div>
+            <Form />
         </div>
     )
 }
